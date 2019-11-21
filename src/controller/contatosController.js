@@ -24,21 +24,6 @@ const add = (request, response) => {
       return response.status(200).send(contato)
     }
   })
-  // let contato = request.body
-  // let baseDados = model.agenda.contatos
-  // contato.id = Math.random().toString(36).substr(-8)
-
-  // if (!contato.nome || !contato.dataNascimento || !contato.celular) {
-  //   response.status(400).send("Dados inválidos");
-  // } else {
-  //   if (baseDados.find(dado => dado.nome === contato.nome)) {
-  //     response.status(400).send("Contato já cadastrado")
-  //   } else {
-  //     model.agenda.contatos.push(contato)
-  //     response.status(201).send(contato)
-  //   }
-  // }
-
 }
 
 const getByName = (request, response) => {
@@ -61,6 +46,7 @@ const getByName = (request, response) => {
 
 const getById = (request, response) => {
   const idParam = request.params.id
+  
   contatosCollection.findById(idParam, (error, contato) => {
     if (error) {
       return response.status(500).send(error)
@@ -72,6 +58,7 @@ const getById = (request, response) => {
       }
     }
     })
+  }
 
     const deleteById = (request, response) => {
       const idParam = request.params.id
@@ -87,13 +74,26 @@ const getById = (request, response) => {
         }
       })
     }
-}
+
+    const pathById = (request, response) => {
+      const idParam = request.params.id
+      const contatoBody = request.body
+      const options = {new: true}
+
+      contatosCollection.findByIdAndUpdate(idParam, contatoBody, options, (error, contato) => {
+        if (error) {
+          return response.status(500).send(error)
+        } else {
+          if (contato){
+            return response.status(200).send(contato)
+          } else {
+            return response.sendStatus(404)
+          }
+        }
+      })
+    }
 
 
 module.exports = {
-  getAll,
-  add,
-  getByName,
-  getById,
-  deleteById
+  getAll, add, getByName, getById, deleteById, pathById
 }
