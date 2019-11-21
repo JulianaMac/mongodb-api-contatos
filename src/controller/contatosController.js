@@ -72,6 +72,21 @@ const getById = (request, response) => {
       }
     }
     })
+
+    const deleteById = (request, response) => {
+      const idParam = request.params.id
+      contatosCollection.findByIdAndDelete(idParam, (error, contato) => {
+        if (error) {
+          return response.status(500).send(error)
+        } else {
+          if (contato){
+            return response.status(200).send('Contato apagado.')
+          } else {
+            return response.sendStatus(404)
+          }
+        }
+      })
+    }
 }
 
 
@@ -79,5 +94,6 @@ module.exports = {
   getAll,
   add,
   getByName,
-  getById
+  getById,
+  deleteById
 }
